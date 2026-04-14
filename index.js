@@ -66,15 +66,12 @@ const WebSocket = require('ws')
 
 const app = express()
 const server = createServer(app)
+app.use(express.static('public'))
 const port = process.env.PORT || 10000
 const path = require('path');
+console.log(`path: ${__dirname}`)
 
-app.get("/", (req, res) => res.type('html').sendFile(path.join(__dirname,"demo.html"), function (err) {
-        if (err) {
-            console.error('Error sending file:', err);
-        } else {
-            console.log('Sent:', fileName);
-        }}));
+app.get("/", (req, res) => res.type('html').redirect("demo.html"));
 
 
 const wss = new WebSocket.Server({ server, path: '/ws' })
