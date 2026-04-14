@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="slidecontainer">
+        <input type="range" min="0" max="255" value="20" class="slider" id="myRange" oninput="changeValue(this.value)">
+    </div>
+    <div id="output">Drag the slider to see real-time updates</div>
+    <script>
+        const wsUrl = 'wss://tryrenderwebsockets.onrender.com/ws'
+
+        var connection = new WebSocket(wsUrl);
+        // var dataPoints=[];
+        const appIdentifier="blvc26"
+
+        connection.onopen = function () {
+            console.log("I am connected to the server");
+        };
+
+        connection.onerror = function (error) {
+            console.log('WebSocket Error ', error);
+        };
+
+        function tryParseJSONObject (jsonString){
+            try {
+                var o = JSON.parse(jsonString);
+                if (o && typeof o === "object") {
+                    return o;
+                }
+            }
+            catch (e) { }
+
+            return false;
+        };
+
+        connection.onmessage = function (e) {
+            let parsed=tryParseJSONObject(e.data);
+            console.log('I received: ', parsed?parsed:e.data);
+            if(parsed.appID && parsed.appID==appIdentifier){
+                console.log("Ths is my data")
+                console.log(`${parsed.type} ${parsed.value}`)
+            } else {
+                console.log("not mine")
+            }
+        };
+
+        // function sendData(){
+        //     let message={
+        //         appID: appIdentifier,
+        //         data:{
+        //             name: "Dave",
+        //             job: "Lecturer"
+        //         }
+        //     }
+        //     console.log('I am sending :'+message);
+        //     connection.send(JSON.stringify(message));
+        // }
+
+        // let ws = null
+        // let reconnectAttempts = 0
+        // const maxReconnectAttempts = 10
+        // const baseBackoffDelay = 1000
+
+        
+        // function connect() {
+        //     ws = new WebSocket(wsUrl)
+        //     WebSocket
+
+        //     ws.on('open', () => {
+        //         console.log('Connected to server')
+        //         reconnectAttempts = 0
+        //         // startPinging()
+        //         // startMessages()
+        //     })
+
+        //     ws.on('message', (data) => {
+        //         console.log('Received:', data.toString())
+        //     })
+
+        //     ws.on('pong', () => {
+        //         clearTimeout(pongTimeout)
+        //     })
+
+        //     ws.on('close', (code, reason) => {
+        //         console.log(`Connection closed: ${code} ${reason}`)
+        //         cleanup()
+        //         handleReconnect()
+        //     })
+
+        //     ws.on('error', (error) => {
+        //         console.error('WebSocket error:', error.message)
+        //     })
+        // }
+
+        let slider=document.getElementById("myRange")
+        slider.onchange
+
+        let output = document.getElementById('output');
+        function changeValue(newVal) {
+            output.innerHTML = "Current value: " + newVal;
+            sendValue(newVal)
+        }
+
+        function sendValue(val){
+            if(connection.readyState === WebSocket.OPEN){
+                // connection.send(val.toString())
+                let message={
+                    appID: appIdentifier,
+                    data:{
+                        type: "pot",
+                        value: val
+                    }
+                }
+                console.log('I am sending :'+message);
+                connection.send(JSON.stringify(message));
+            } else {
+                console.log('I am not connected')
+            }
+        }
+
+        // connect()
+        
+    </script>
+</body>
+</html>

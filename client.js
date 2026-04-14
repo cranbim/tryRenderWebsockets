@@ -8,6 +8,8 @@ const maxReconnectAttempts = 10
 const baseBackoffDelay = 1000
 let pingInterval = null
 let pongTimeout = null
+let messageInterval=null
+let messageCount=0;
 
 function connect() {
   ws = new WebSocket(wsUrl)
@@ -15,7 +17,8 @@ function connect() {
   ws.on('open', () => {
     console.log('Connected to server')
     reconnectAttempts = 0
-    startPinging()
+    // startPinging()
+    startMessages()
   })
 
   ws.on('message', (data) => {
@@ -37,7 +40,19 @@ function connect() {
   })
 }
 
+function startMessages(){
+  console.log('start messages')
+  messageInterval = setInterval(() => {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(`message ${messageCount++}`)
+    } else {
+        console.log('no longer connected')
+    }
+  }, 5000)
+}
+
 function startPinging() {
+  console.log('start pings')
   pingInterval = setInterval(() => {
     if (ws.readyState === WebSocket.OPEN) {
       ws.ping()
@@ -46,8 +61,10 @@ function startPinging() {
         console.log('No pong received, terminating stale connection')
         ws.terminate()
       }, 10000)
+    } else {
+        console.log('not connected')
     }
-  }, 30000)
+  }, 1000)
 }
 
 function handleReconnect() {
