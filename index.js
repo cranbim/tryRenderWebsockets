@@ -105,7 +105,7 @@ wss.on('connection', function connection(ws) {
                 let message={
                     appID: appIdentifier,
                     data:{
-                        type: type,
+                        type: "setControl",
                         value: val
                     }
                 }
