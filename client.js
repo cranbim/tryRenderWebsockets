@@ -1,6 +1,7 @@
 const WebSocket = require('ws')
 
-const wsUrl = 'wss://example-app.onrender.com/ws'
+// const wsUrl = 'wss://example-app.onrender.com/ws'
+const wsUrl = 'wss://tryrenderwebsockets.onrender.com/ws'
 let ws = null
 let reconnectAttempts = 0
 const maxReconnectAttempts = 10

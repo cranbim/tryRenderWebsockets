@@ -14,6 +14,7 @@ function heartbeat() {
 
 wss.on('connection', function connection(ws) {
   ws.isAlive = true
+  console.log('connection received')
   ws.on('error', console.error)
   ws.on('pong', heartbeat)
 
