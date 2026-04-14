@@ -12,7 +12,7 @@
     <div class="slidecontainer">
         <input type="range" min="0" max="255" value="20" class="slider" id="myRange" oninput="changeValue(this.value)">
     </div>
-    <div id="output">Drag the slider to see real-time updates</div>
+    <!-- <div id="output">We probably do not need this</div> -->
     <button onclick="sendTap()">Tap</button>
     <script>
         const wsUrl = 'wss://tryrenderwebsockets.onrender.com/ws'
@@ -20,7 +20,6 @@
         let myControl=-99
 
         var connection = new WebSocket(wsUrl);
-        // var dataPoints=[];
         const appIdentifier="blvc26"
 
         connection.onopen = function () {
@@ -46,7 +45,6 @@
                 }
             }
             catch (e) { }
-
             return false;
         };
 
@@ -54,7 +52,7 @@
             let parsed=tryParseJSONObject(e.data);
             console.log('I received: ', parsed?parsed:e.data);
             if(parsed.appID && parsed.appID==appIdentifier){
-                console.log("Ths is my data")
+                // console.log("Ths is my data")
                 console.log(`${parsed.data.control} ${parsed.data.type} ${parsed.data.value}`)
                 if(parsed.data.type=="setID"){
                     setMyID(parsed.data.value)
@@ -63,7 +61,7 @@
                     setMyControl(parsed.data.value)
                 }
             } else {
-                console.log("not mine")
+                console.log("data from someone else's app perhaps")
             }
         };
 
@@ -77,17 +75,6 @@
             document.getElementById("my_control").innerText=`active: ${id}`
         }
 
-        // function sendData(){
-        //     let message={
-        //         appID: appIdentifier,
-        //         data:{
-        //             name: "Dave",
-        //             job: "Lecturer"
-        //         }
-        //     }
-        //     console.log('I am sending :'+message);
-        //     connection.send(JSON.stringify(message));
-        // }
 
         // let ws = null
         // let reconnectAttempts = 0
@@ -106,10 +93,6 @@
         //         // startMessages()
         //     })
 
-        //     ws.on('message', (data) => {
-        //         console.log('Received:', data.toString())
-        //     })
-
         //     ws.on('pong', () => {
         //         clearTimeout(pongTimeout)
         //     })
@@ -126,12 +109,12 @@
         // }
 
         let slider=document.getElementById("myRange")
-        slider.onchange
+        // slider.onchange
 
-        let output = document.getElementById('output');
+        // let output = document.getElementById('output');
         
         function changeValue(newVal) {
-            output.innerHTML = "Current value: " + newVal;
+            // output.innerHTML = "Current value: " + newVal;
             sendValue(newVal)
         }
 

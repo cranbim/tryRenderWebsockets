@@ -9,6 +9,7 @@
 <body>
     <h1>I am the live page</h1>
     <div id="my_id">Waiting for connection number</div>
+    <button onclick="resetControls()">reset controls</button>
     <script>
         const wsUrl = 'wss://tryrenderwebsockets.onrender.com/ws'
         let myID=-99
@@ -68,6 +69,18 @@
                     appID: appIdentifier,
                     data:{
                         type: 'live',
+                        value: 0
+                    }
+                }
+            console.log('I am sending :'+message);
+            connection.send(JSON.stringify(message));
+        }
+
+        function resetControls(){
+            let message={
+                    appID: appIdentifier,
+                    data:{
+                        type: 'resetControls',
                         value: 0
                     }
                 }

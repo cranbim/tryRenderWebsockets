@@ -97,6 +97,22 @@ wss.on('connection', function connection(ws) {
             liveClient=ws
             sendData("youAreLive",0)
         }
+        if(parsed.data.type=="resetControls"){
+            unallocatedControls=[0,1,2,3,4,5,6,7]
+            allocatedControls=[]
+            wss.clients.forEach(function each(client) {
+            if (client !== ws && client.readyState === WebSocket.OPEN) {
+                let message={
+                    appID: appIdentifier,
+                    data:{
+                        type: type,
+                        value: val
+                    }
+                }
+                client.send(JSON.stringify(message));
+            }
+            });
+        }
     }
     if(liveClient !== null){
         liveClient.send(message.toString())

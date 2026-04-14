@@ -1,0 +1,20 @@
+14/4/26
+public/demo.html is the code we want to render on mobile screens.
+public/live.html - leave this  - it is where data gets sent to and will be replaced by the live sketch
+
+if myID=-99 we have not yet connected to the websocket server
+if myControl=-99 we have not been allocated one of the active control channels.
+you can style the page for these conditions to indicate state.
+
+if myControl is even (0 is even) display slider to make use of viewport
+if myControl is odd, display button to make use of viewport
+disable/hide whichever one is not in use
+On slider preventDefault so that page does not scroll when sliding.
+
+The server goes to sleep, but you can test a local/live server copy of your frontend
+code against the server. When you launch a page, even locally, it will attempt to
+contact the server. This will start a wake up process that may take 40 seconds
+After this time refresh your page and you should get a connection and a control
+number for the first 8 connections.
+In the console you will get your slider changes or button hits echoed back to you
+from the server.
