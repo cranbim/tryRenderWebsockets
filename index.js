@@ -20,7 +20,7 @@ wss.on('connection', function connection(ws) {
 
   ws.on('message', (message) => {
     console.log('Received:', message.toString())
-    ws.send(message)
+    ws.send(message.toString())
     // wss.clients.forEach(function each(client) {
     //   if (client !== ws && client.readyState === WebSocket.OPEN) {
     //     client.send(msgJ);
