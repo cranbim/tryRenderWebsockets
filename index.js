@@ -69,7 +69,7 @@ const server = createServer(app)
 const port = process.env.PORT || 10000
 const path = require('path');
 
-app.get("/", (req, res) => res.type('html').sendfile(path.join(__dirname,"demo.html"), function (err) {
+app.get("/", (req, res) => res.type('html').sendFile(path.join(__dirname,"demo.html"), function (err) {
         if (err) {
             console.error('Error sending file:', err);
         } else {
