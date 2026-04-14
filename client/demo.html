@@ -11,6 +11,7 @@
         <input type="range" min="0" max="255" value="20" class="slider" id="myRange" oninput="changeValue(this.value)">
     </div>
     <div id="output">Drag the slider to see real-time updates</div>
+    <button onclick="sendTap()">Tap</button>
     <script>
         const wsUrl = 'wss://tryrenderwebsockets.onrender.com/ws'
 
@@ -43,7 +44,7 @@
             console.log('I received: ', parsed?parsed:e.data);
             if(parsed.appID && parsed.appID==appIdentifier){
                 console.log("Ths is my data")
-                console.log(`${parsed.type} ${parsed.value}`)
+                console.log(`${parsed.data.type} ${parsed.data.value}`)
             } else {
                 console.log("not mine")
             }
@@ -101,18 +102,27 @@
         slider.onchange
 
         let output = document.getElementById('output');
+        
         function changeValue(newVal) {
             output.innerHTML = "Current value: " + newVal;
             sendValue(newVal)
         }
 
         function sendValue(val){
+            sendData("pot",val)
+        }
+
+        function sendTap(){
+            sendData("pad",128)
+        }
+
+        function sendData(type, val){
             if(connection.readyState === WebSocket.OPEN){
                 // connection.send(val.toString())
                 let message={
                     appID: appIdentifier,
                     data:{
-                        type: "pot",
+                        type: type,
                         value: val
                     }
                 }
