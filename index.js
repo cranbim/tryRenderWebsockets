@@ -106,7 +106,7 @@ wss.on('connection', function connection(ws) {
                     appID: appIdentifier,
                     data:{
                         type: "setControl",
-                        value: val
+                        value: -99
                     }
                 }
                 client.send(JSON.stringify(message));
