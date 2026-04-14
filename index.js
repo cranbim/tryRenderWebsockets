@@ -45,7 +45,7 @@ wss.on('connection', function connection(ws) {
   ws.on('error', console.error)
 //   ws.on('pong', heartbeat)
     
-  function sendMessage(type,value){
+  function sendMessage(type,val){
     let message={
                     appID: appIdentifier,
                     data:{
