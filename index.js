@@ -46,14 +46,14 @@ function getControl(ws){
     return allocatedControl
 }
 
-function releaseControl(c){
-    let ci=allocatedControls.findIndex(c)
-    if(ci>-1){
-        allocatedControls.splice(ci,1)
-        unallocatedControls.push(c)
-    }
-    console.log(unallocatedControls,allocatedControls)
-}
+// function releaseControl(c){
+//     let ci=allocatedControls.findIndex(c)
+//     if(ci>-1){
+//         allocatedControls.splice(ci,1)
+//         unallocatedControls.push(c)
+//     }
+//     console.log(unallocatedControls,allocatedControls)
+// }
 
 wss.on('connection', function connection(ws) {
   let myConnection=getNextConnection(ws)
@@ -71,6 +71,7 @@ wss.on('connection', function connection(ws) {
   } else {
     console.log('control not allocated')
   }
+
   ws.on('error', console.error)
 //   ws.on('pong', heartbeat)
     
@@ -97,7 +98,15 @@ wss.on('connection', function connection(ws) {
     // ws.send('Hello over WebSocket!')
   })
 
-  ws.on('close', releaseControl(myContol))
+//   ws.on('close', function (){
+//     let ci=allocatedControls.findIndex(myContol)
+//     if(ci>-1){
+//         allocatedControls.splice(ci,1)
+//         unallocatedControls.push(c)
+//     }
+//     console.log(unallocatedControls,allocatedControls)
+//     myContol=-99
+//   })
 })
 
 // const interval = setInterval(function ping() {
