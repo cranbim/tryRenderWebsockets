@@ -19,6 +19,7 @@ let allocatedControls=[]
 const appIdentifier="blvc26"
 
 app.get("/", (req, res) => res.type('html').redirect("demo.html"));
+app.get("/live", (req, res) => res.type('html').redirect("live.html"));
 
 
 const wss = new WebSocket.Server({ server, path: '/ws' })
@@ -54,6 +55,7 @@ function getControl(ws){
 //     }
 //     console.log(unallocatedControls,allocatedControls)
 // }
+let liveClient=null
 
 wss.on('connection', function connection(ws) {
   let myConnection=getNextConnection(ws)
@@ -89,7 +91,17 @@ wss.on('connection', function connection(ws) {
 
   ws.on('message', (message) => {
     console.log('Received:', message.toString())
-    ws.send(message.toString())
+    let parsed=JSON.parse(message)
+    if(parsed.appID==appIdentifier){
+        if(parsed.data.type=="live"){
+            liveClient=ws
+            sendData("youAreLive",0)
+        }
+    }
+    if(liveClient !== null){
+        liveClient.send(message.toString())
+    }
+    ws.send(message.toString()) //debug, echo back to sender
     // wss.clients.forEach(function each(client) {
     //   if (client !== ws && client.readyState === WebSocket.OPEN) {
     //     client.send(msgJ);
@@ -97,6 +109,23 @@ wss.on('connection', function connection(ws) {
     // });
     // ws.send('Hello over WebSocket!')
   })
+
+  function sendData(type, val){
+        if(ws.readyState === WebSocket.OPEN){
+            // connection.send(val.toString())
+            let message={
+                appID: appIdentifier,
+                data:{
+                    type: type,
+                    value: val
+                }
+            }
+            console.log('I am sending :'+message);
+            connection.send(JSON.stringify(message));
+        } else {
+            console.log('I am not connected')
+        }
+    }
 
 //   ws.on('close', function (){
 //     let ci=allocatedControls.findIndex(myContol)

@@ -7,18 +7,14 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <h1>I am the live page</h1>
     <div id="my_id">Waiting for connection number</div>
-    <div id="my_control">passive</div>
-    <div class="slidecontainer">
-        <input type="range" min="0" max="255" value="20" class="slider" id="myRange" oninput="changeValue(this.value)">
-    </div>
-    <div id="output">Drag the slider to see real-time updates</div>
-    <button onclick="sendTap()">Tap</button>
     <script>
         const wsUrl = 'wss://tryrenderwebsockets.onrender.com/ws'
         let myID=-99
-        let myControl=-99
 
+        let values=[0,0,0,0,0,0,0,0]
+        
         var connection = new WebSocket(wsUrl);
         // var dataPoints=[];
         const appIdentifier="blvc26"
@@ -33,7 +29,6 @@
 
         connection.onclose = function (){
             let myID=-99
-            let myControl=-99
             document.getElementById("my_id").innerText=`refresh to reconnect`
             document.getElementById("my_control").innerText=`passive`
         }
@@ -58,14 +53,27 @@
                 console.log(`${parsed.data.control} ${parsed.data.type} ${parsed.data.value}`)
                 if(parsed.data.type=="setID"){
                     setMyID(parsed.data.value)
+                    claimLive()
                 }
-                if(parsed.data.type=="setControl"){
-                    setMyControl(parsed.data.value)
+                if(parsed.data.type=="youAreLive"){
+                    console.log("I am now live")
                 }
             } else {
                 console.log("not mine")
             }
         };
+
+        function claimLive(){
+            let message={
+                    appID: appIdentifier,
+                    data:{
+                        type: 'live',
+                        value: 0
+                    }
+                }
+            console.log('I am sending :'+message);
+            connection.send(JSON.stringify(message));
+        }
 
         function setMyID(id){
             myID=id
@@ -125,41 +133,40 @@
         //     })
         // }
 
-        let slider=document.getElementById("myRange")
-        slider.onchange
+        // let slider=document.getElementById("myRange")
+        // slider.onchange
 
-        let output = document.getElementById('output');
+        // let output = document.getElementById('output');
         
-        function changeValue(newVal) {
-            output.innerHTML = "Current value: " + newVal;
-            sendValue(newVal)
-        }
+        // function changeValue(newVal) {
+        //     output.innerHTML = "Current value: " + newVal;
+        //     sendValue(newVal)
+        // }
 
-        function sendValue(val){
-            sendData("pot",val)
-        }
+        // function sendValue(val){
+        //     sendData("pot",val)
+        // }
 
-        function sendTap(){
-            sendData("pad",128)
-        }
+        // function sendTap(){
+        //     sendData("pad",128)
+        // }
 
-        function sendData(type, val){
-            if(connection.readyState === WebSocket.OPEN){
-                // connection.send(val.toString())
-                let message={
-                    appID: appIdentifier,
-                    data:{
-                        control: myControl,
-                        type: type,
-                        value: val
-                    }
-                }
-                console.log('I am sending :'+message);
-                connection.send(JSON.stringify(message));
-            } else {
-                console.log('I am not connected')
-            }
-        }
+        // function sendData(type, val){
+        //     if(connection.readyState === WebSocket.OPEN){
+        //         // connection.send(val.toString())
+        //         let message={
+        //             appID: appIdentifier,
+        //             data:{
+        //                 type: type,
+        //                 value: val
+        //             }
+        //         }
+        //         console.log('I am sending :'+message);
+        //         connection.send(JSON.stringify(message));
+        //     } else {
+        //         console.log('I am not connected')
+        //     }
+        // }
 
         // connect()
         
