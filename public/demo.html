@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="my_id">Waiting for index</div>
+    <div id="my_id">Waiting for connection number</div>
+    <div id="my_control">passive</div>
     <div class="slidecontainer">
         <input type="range" min="0" max="255" value="20" class="slider" id="myRange" oninput="changeValue(this.value)">
     </div>
@@ -16,6 +17,7 @@
     <script>
         const wsUrl = 'wss://tryrenderwebsockets.onrender.com/ws'
         let myID=-99
+        let myControl=-99
 
         var connection = new WebSocket(wsUrl);
         // var dataPoints=[];
@@ -28,6 +30,13 @@
         connection.onerror = function (error) {
             console.log('WebSocket Error ', error);
         };
+
+        connection.onclose = function (){
+            let myID=-99
+            let myControl=-99
+            document.getElementById("my_id").innerText=`refresh to reconnect`
+            document.getElementById("my_control").innerText=`passive`
+        }
 
         function tryParseJSONObject (jsonString){
             try {
@@ -47,8 +56,11 @@
             if(parsed.appID && parsed.appID==appIdentifier){
                 console.log("Ths is my data")
                 console.log(`${parsed.data.type} ${parsed.data.value}`)
-                if(parsed.data.type="setID"){
+                if(parsed.data.type=="setID"){
                     setMyID(parsed.data.value)
+                }
+                if(parsed.data.type=="setControl"){
+                    setMyControl(parsed.data.value)
                 }
             } else {
                 console.log("not mine")
@@ -57,7 +69,12 @@
 
         function setMyID(id){
             myID=id
-            document.getElementById(my_id).innerText=`ID: ${id}`
+            document.getElementById("my_id").innerText=`ID: ${id}`
+        }
+
+        function setMyControl(id){
+            myControl=id
+            document.getElementById("my_control").innerText=`active: ${id}`
         }
 
         // function sendData(){

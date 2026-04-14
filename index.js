@@ -14,6 +14,8 @@ console.log(`path: ${__dirname}`)
 let connections=[]
 let nextConnection=0
 let maxConnections=8
+let unallocatedControls=[0,1,2,3,4,5,6,7]
+let allocatedControls=[]
 const appIdentifier="blvc26"
 
 app.get("/", (req, res) => res.type('html').redirect("demo.html"));
@@ -27,20 +29,47 @@ function heartbeat() {
 
 function getNextConnection(ws){
     let allocatedConnection=-99
-    if(nextConnection<maxConnections-1){
+    if(true){
         allocatedConnection=nextConnection++
     }
     return allocatedConnection
 }
 
+function getControl(ws){
+    let allocatedControl=-99
+    if(unallocatedControls.length>0){
+        let aControl=unallocatedControls.shift()
+        allocatedControls.push(aControl)
+        allocatedControl=aControl
+    }
+    console.log(unallocatedControls,allocatedControls)
+    return allocatedControl
+}
+
+function releaseControl(c){
+    let ci=allocatedControls.findIndex(c)
+    if(ci>-1){
+        allocatedControls.splice(ci,1)
+        unallocatedControls.push(c)
+    }
+    console.log(unallocatedControls,allocatedControls)
+}
+
 wss.on('connection', function connection(ws) {
   let myConnection=getNextConnection(ws)
+  let myContol=getControl(ws)
   ws.isAlive = true
   if(myConnection>-1){
     console.log('connection received, allocating: ',myConnection)
     sendMessage('setID',myConnection)
   } else {
-    console.log('all connections allocated')
+    console.log('connection not allocated')
+  }
+  if(myContol>-1){
+    console.log('control allocated: ',myContol)
+    sendMessage('setControl',myContol)
+  } else {
+    console.log('control not allocated')
   }
   ws.on('error', console.error)
 //   ws.on('pong', heartbeat)
@@ -67,20 +96,22 @@ wss.on('connection', function connection(ws) {
     // });
     // ws.send('Hello over WebSocket!')
   })
+
+  ws.on('close', releaseControl(myContol))
 })
 
-const interval = setInterval(function ping() {
-  wss.clients.forEach(function each(ws) {
-    if (ws.isAlive === false) return ws.terminate()
+// const interval = setInterval(function ping() {
+//   wss.clients.forEach(function each(ws) {
+//     if (ws.isAlive === false) return ws.terminate()
 
-    ws.isAlive = false
-    ws.ping()
-  })
-}, 30000)
+//     ws.isAlive = false
+//     ws.ping()
+//   })
+// }, 30000)
 
-wss.on('close', function close() {
-  clearInterval(interval)
-})
+// wss.on('close', function close() {
+//   clearInterval(interval)
+// })
 
 server.listen(port, () => {
   console.log(`Server listening on port ${port}`)
