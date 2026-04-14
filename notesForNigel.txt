@@ -1,7 +1,8 @@
 14/4/26
 public/demo.html is the code we want to render on mobile screens.
-public/live.html - leave this  - it is where data gets sent to and will be replaced by the live sketch
-
+public/live.html it is where data gets sent to and will be replaced by the live sketch
+    Run this to see the changes sent by the clients in real time
+    
 if myID=-99 we have not yet connected to the websocket server
 if myControl=-99 we have not been allocated one of the active control channels.
 you can style the page for these conditions to indicate state.

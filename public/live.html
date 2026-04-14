@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.13/lib/p5.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -58,6 +59,9 @@
                 }
                 if(parsed.data.type=="youAreLive"){
                     console.log("I am now live")
+                }
+                if(parsed.data.type=="pot" || parsed.data.type=="pad"){
+                    updateValue(parsed.data.control, parsed.data.type, parsed.data.value)
                 }
             } else {
                 console.log("not mine")
@@ -184,5 +188,6 @@
         // connect()
         
     </script>
+    <script src="sketch.js"></script>
 </body>
 </html>
