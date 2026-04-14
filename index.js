@@ -121,7 +121,7 @@ wss.on('connection', function connection(ws) {
                 }
             }
             console.log('I am sending :'+message);
-            connection.send(JSON.stringify(message));
+            ws.send(JSON.stringify(message));
         } else {
             console.log('I am not connected')
         }
