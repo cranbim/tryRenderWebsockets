@@ -18,3 +18,7 @@ After this time refresh your page and you should get a connection and a control
 number for the first 8 connections.
 In the console you will get your slider changes or button hits echoed back to you
 from the server.
+
+if you get past your 8 active controls, you can reset by loading the
+public/live.html (locally or from https://tryrenderwebsockets.onrender.com/live.html)
+hit the reset controls button and this will de-allocate current clients.
