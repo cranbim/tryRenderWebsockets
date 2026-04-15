@@ -96,7 +96,7 @@ wss.on('connection', function connection(ws) {
     let ci=allocatedControls.findIndex(i => i==myContol)
     if(ci>-1){
         allocatedControls.splice(ci,1)
-        unallocatedControls.push(c)
+        unallocatedControls.push(myControl)
     }
     console.log(unallocatedControls,allocatedControls)
     myContol=-99
