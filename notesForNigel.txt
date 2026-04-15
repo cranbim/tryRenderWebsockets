@@ -15,8 +15,11 @@ On slider preventDefault so that page does not scroll when sliding.
 The server goes to sleep, but you can test a local/live server copy of your frontend
 code against the server. When you launch a page, even locally, it will attempt to
 contact the server. This will start a wake up process that may take 40 seconds
-Loading the test page will do this for you. 
-https://tryrenderwebsockets.onrender.com/live.html
+Loading the live or blvc page will do this for you. 
+https://tryrenderwebsockets.onrender.com/live.html useful for debug/test
+
+The live visual is at:
+https://tryrenderwebsockets.onrender.com/blvc.html
 
 After this time refresh your page and you should get a connection and a control
 number for the first 8 connections.
