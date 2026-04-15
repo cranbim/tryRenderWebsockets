@@ -8,9 +8,11 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>I am the live page</h1>
-    <div id="my_id">Waiting for connection number</div>
-    <button onclick="resetControls()">reset controls</button>
+    <div class="live-bar">
+        <h1>Live</h1>
+        <div id="my_id">Waiting for connection number</div>
+        <button onclick="resetControls()">reset controls</button>
+    </div>
     <script>
         const wsUrl = 'wss://tryrenderwebsockets.onrender.com/ws'
         let myID=-99

@@ -7,13 +7,16 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="my_id">Waiting for connection number</div>
-    <div id="my_control">passive</div>
-    <div class="slidecontainer">
-        <input type="range" min="0" max="255" value="20" class="slider" id="myRange" oninput="changeValue(this.value)">
+    <div class="status-bar">
+        <div id="my_id">Waiting for connection number</div>
+        <div id="my_control">passive</div>
     </div>
-    <!-- <div id="output">We probably do not need this</div> -->
-    <button onclick="sendTap()">Tap</button>
+    <div class="control-area">
+        <div class="slidecontainer">
+            <input type="range" min="0" max="255" value="20" class="slider" id="myRange" oninput="changeValue(this.value)">
+        </div>
+        <button onclick="sendTap()">Tap</button>
+    </div>
     <script>
         const wsUrl = 'wss://tryrenderwebsockets.onrender.com/ws'
         let myID=-99
@@ -73,6 +76,26 @@
         function setMyControl(id){
             myControl=id
             document.getElementById("my_control").innerText=`active: ${id}`
+            updateControlVisibility()
+        }
+
+        function updateControlVisibility(){
+            let sliderContainer = document.querySelector(".slidecontainer")
+            let button = document.querySelector("button")
+
+            if(myControl === -99){
+                sliderContainer.style.display = "none"
+                button.style.display = "none"
+                return
+            }
+
+            if(myControl % 2 === 0){
+                sliderContainer.style.display = ""
+                button.style.display = "none"
+            } else {
+                sliderContainer.style.display = "none"
+                button.style.display = ""
+            }
         }
 
 
@@ -109,7 +132,8 @@
         // }
 
         let slider=document.getElementById("myRange")
-        // slider.onchange
+
+        updateControlVisibility()
 
         // let output = document.getElementById('output');
         
