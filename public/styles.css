@@ -1,47 +1,285 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0a0a12;
+  color: #e0e0e0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
 }
+
 canvas {
   display: block;
   cursor: none;
 }
 
+/* ---- Live Page Bar ---- */
+
+.live-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+}
+
+.live-bar h1 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.live-bar #my_id {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.live-bar button {
+  margin-left: auto;
+  padding: 6px 14px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.live-bar button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.live-bar button:active {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* ---- Status Bar ---- */
+
+.status-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  z-index: 10;
+  background: linear-gradient(to bottom, rgba(10, 10, 18, 0.95), transparent);
+}
+
+#my_id, #my_control {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.4s ease;
+}
+
+/* ---- Control Area ---- */
+
+.control-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  height: 100dvh;
+  width: 100%;
+}
+
+/* ---- Vertical Slider ---- */
+
 .slidecontainer {
-  width: 100%; /* Width of the outside container */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  height: 80dvh;
+  width: 100%;
 }
 
-/* The slider itself */
 .slider {
-  -webkit-appearance: none;  /* Override default CSS styles */
+  -webkit-appearance: none;
   appearance: none;
-  width: 100%; /* Full-width */
-  height: 25px; /* Specified height */
-  background: #d3d3d3; /* Grey background */
-  outline: none; /* Remove outline */
-  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-  transition: opacity .2s;
+  width: 70vh;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  transform: rotate(-90deg);
+  cursor: pointer;
+  touch-action: none;
+  outline: none;
 }
 
-/* Mouse-over effects */
-.slider:hover {
-  opacity: 1; /* Fully shown on mouse-over */
+.slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 180, 255, 0.08),
+    rgba(0, 180, 255, 0.2)
+  );
 }
 
-/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
 .slider::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Override default look */
+  -webkit-appearance: none;
   appearance: none;
-  width: 25px; /* Set a specific slider handle width */
-  height: 25px; /* Slider handle height */
-  background: #04AA6D; /* Green background */
-  cursor: pointer; /* Cursor on hover */
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 180, 255, 0.3);
+  background: radial-gradient(circle at 40% 40%, rgba(0, 180, 255, 0.15), transparent 70%);
+  margin-top: -25px;
+  cursor: pointer;
+  box-shadow:
+    0 0 24px rgba(0, 180, 255, 0.3),
+    0 0 60px rgba(0, 180, 255, 0.1);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  animation: sliderPulse 3s ease-in-out infinite;
+}
+
+.slider:active::-webkit-slider-thumb {
+  border-color: rgba(0, 210, 255, 0.7);
+  box-shadow:
+    0 0 35px rgba(0, 180, 255, 0.6),
+    0 0 90px rgba(0, 180, 255, 0.25);
+}
+
+.slider::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 180, 255, 0.08),
+    rgba(0, 180, 255, 0.2)
+  );
+  border: none;
 }
 
 .slider::-moz-range-thumb {
-  width: 25px; /* Set a specific slider handle width */
-  height: 25px; /* Slider handle height */
-  background: #04AA6D; /* Green background */
-  cursor: pointer; /* Cursor on hover */
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 180, 255, 0.3);
+  background: radial-gradient(circle at 40% 40%, rgba(0, 180, 255, 0.15), transparent 70%);
+  cursor: pointer;
+  box-shadow:
+    0 0 24px rgba(0, 180, 255, 0.3),
+    0 0 60px rgba(0, 180, 255, 0.1);
+  animation: sliderPulse 3s ease-in-out infinite;
+}
+
+.slider:active::-moz-range-thumb {
+  border-color: rgba(0, 210, 255, 0.7);
+  box-shadow:
+    0 0 35px rgba(0, 180, 255, 0.6),
+    0 0 90px rgba(0, 180, 255, 0.25);
+}
+
+/* ---- Tap Button (demo page only) ---- */
+
+.control-area button {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 180, 255, 0.3);
+  background: radial-gradient(circle at 45% 45%, rgba(0, 180, 255, 0.12), transparent 70%);
+  color: rgba(0, 210, 255, 0.9);
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+  transition: border-color 0.3s ease, transform 0.1s ease;
+  animation: buttonPulse 3s ease-in-out infinite;
+}
+
+.control-area button::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    rgba(0, 180, 255, 0.25),
+    transparent,
+    rgba(0, 180, 255, 0.15),
+    transparent
+  );
+  animation: borderSpin 4s linear infinite;
+  z-index: -1;
+}
+
+.control-area button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 180, 255, 0.3), transparent 70%);
+  opacity: 0;
+  transform: scale(0);
+  transition: none;
+}
+
+.control-area button:active {
+  transform: scale(0.92);
+  border-color: rgba(0, 210, 255, 0.7);
+}
+
+.control-area button:active::after {
+  opacity: 1;
+  transform: scale(2.5);
+  transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+@keyframes sliderPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 24px rgba(0, 180, 255, 0.2),
+      inset 0 0 20px rgba(0, 180, 255, 0.03);
+  }
+  50% {
+    box-shadow:
+      0 0 40px rgba(0, 180, 255, 0.35),
+      inset 0 0 30px rgba(0, 180, 255, 0.06);
+  }
+}
+
+@keyframes buttonPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 30px rgba(0, 180, 255, 0.1),
+      inset 0 0 30px rgba(0, 180, 255, 0.03);
+  }
+  50% {
+    box-shadow:
+      0 0 50px rgba(0, 180, 255, 0.2),
+      inset 0 0 50px rgba(0, 180, 255, 0.06);
+  }
+}
+
+@keyframes borderSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
