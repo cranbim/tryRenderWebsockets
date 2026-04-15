@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.13/lib/p5.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>I am the blvc page</h1>
+    <div id="my_id">Waiting for connection number</div>
+    <button onclick="resetControls()">reset controls</button>
+    <script>
+        const wsUrl = 'wss://tryrenderwebsockets.onrender.com/ws'
+        let myID=-99
+
+        let values=[0,0,0,0,0,0,0,0]
+        
+        var connection = new WebSocket(wsUrl);
+        // var dataPoints=[];
+        const appIdentifier="blvc26"
+
+        connection.onopen = function () {
+            console.log("I am connected to the server");
+        };
+
+        connection.onerror = function (error) {
+            console.log('WebSocket Error ', error);
+        };
+
+        connection.onclose = function (){
+            let myID=-99
+            // document.getElementById("my_id").innerText=`refresh to reconnect`
+            // document.getElementById("my_control").innerText=`passive`
+        }
+
+        function tryParseJSONObject (jsonString){
+            try {
+                var o = JSON.parse(jsonString);
+                if (o && typeof o === "object") {
+                    return o;
+                }
+            }
+            catch (e) { }
+
+            return false;
+        };
+
+        connection.onmessage = function (e) {
+            let parsed=tryParseJSONObject(e.data);
+            console.log('I received: ', parsed?parsed:e.data);
+            if(parsed.appID && parsed.appID==appIdentifier){
+                console.log("Ths is my data")
+                console.log(`${parsed.data.control} ${parsed.data.type} ${parsed.data.value}`)
+                if(parsed.data.type=="setID"){
+                    setMyID(parsed.data.value)
+                    claimLive()
+                }
+                if(parsed.data.type=="youAreLive"){
+                    console.log("I am now live")
+                }
+                if(parsed.data.type=="pot" || parsed.data.type=="pad"){
+                    updateValue(parsed.data.control, parsed.data.type, parsed.data.value)
+                }
+            } else {
+                console.log("not mine")
+            }
+        };
+
+        function claimLive(){
+            let message={
+                    appID: appIdentifier,
+                    data:{
+                        type: 'live',
+                        value: 1
+                    }
+                }
+            console.log('I am sending :'+message);
+            connection.send(JSON.stringify(message));
+        }
+
+        function resetControls(){
+            let message={
+                    appID: appIdentifier,
+                    data:{
+                        type: 'resetControls',
+                        value: 0
+                    }
+                }
+            console.log('I am sending :'+message);
+            connection.send(JSON.stringify(message));
+        }
+
+        function setMyID(id){
+            myID=id
+            document.getElementById("my_id").innerText=`ID: ${id}`
+        }
+
+        function setMyControl(id){
+            myControl=id
+            document.getElementById("my_control").innerText=`active: ${id}`
+        }
+
+        // function sendData(){
+        //     let message={
+        //         appID: appIdentifier,
+        //         data:{
+        //             name: "Dave",
+        //             job: "Lecturer"
+        //         }
+        //     }
+        //     console.log('I am sending :'+message);
+        //     connection.send(JSON.stringify(message));
+        // }
+
+        // let ws = null
+        // let reconnectAttempts = 0
+        // const maxReconnectAttempts = 10
+        // const baseBackoffDelay = 1000
+
+        
+        // function connect() {
+        //     ws = new WebSocket(wsUrl)
+        //     WebSocket
+
+        //     ws.on('open', () => {
+        //         console.log('Connected to server')
+        //         reconnectAttempts = 0
+        //         // startPinging()
+        //         // startMessages()
+        //     })
+
+        //     ws.on('message', (data) => {
+        //         console.log('Received:', data.toString())
+        //     })
+
+        //     ws.on('pong', () => {
+        //         clearTimeout(pongTimeout)
+        //     })
+
+        //     ws.on('close', (code, reason) => {
+        //         console.log(`Connection closed: ${code} ${reason}`)
+        //         cleanup()
+        //         handleReconnect()
+        //     })
+
+        //     ws.on('error', (error) => {
+        //         console.error('WebSocket error:', error.message)
+        //     })
+        // }
+
+        // let slider=document.getElementById("myRange")
+        // slider.onchange
+
+        // let output = document.getElementById('output');
+        
+        // function changeValue(newVal) {
+        //     output.innerHTML = "Current value: " + newVal;
+        //     sendValue(newVal)
+        // }
+
+        // function sendValue(val){
+        //     sendData("pot",val)
+        // }
+
+        // function sendTap(){
+        //     sendData("pad",128)
+        // }
+
+        // function sendData(type, val){
+        //     if(connection.readyState === WebSocket.OPEN){
+        //         // connection.send(val.toString())
+        //         let message={
+        //             appID: appIdentifier,
+        //             data:{
+        //                 type: type,
+        //                 value: val
+        //             }
+        //         }
+        //         console.log('I am sending :'+message);
+        //         connection.send(JSON.stringify(message));
+        //     } else {
+        //         console.log('I am not connected')
+        //     }
+        // }
+
+        // connect()
+        
+    </script>
+    <script src="sketch.js"></script>
+</body>
+</html>

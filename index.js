@@ -20,6 +20,7 @@ const appIdentifier="blvc26"
 
 app.get("/", (req, res) => res.type('html').redirect("demo.html"));
 app.get("/live", (req, res) => res.type('html').redirect("live.html"));
+app.get("/blvc", (req, res) => res.type('html').redirect("blvc.html"));
 
 
 const wss = new WebSocket.Server({ server, path: '/ws' })
@@ -55,7 +56,8 @@ function getControl(ws){
 //     }
 //     console.log(unallocatedControls,allocatedControls)
 // }
-let liveClient=null
+let liveClientDemo=null //demo showing live response to inputs
+let liveClient=null //active control driven visuals
 
 wss.on('connection', function connection(ws) {
   let myConnection=getNextConnection(ws)
@@ -89,13 +91,37 @@ wss.on('connection', function connection(ws) {
     ws.send(JSON.stringify(message));
   }
 
+  function deallocateControl(){
+    let ci=allocatedControls.findIndex(myContol)
+    if(ci>-1){
+        allocatedControls.splice(ci,1)
+        unallocatedControls.push(c)
+    }
+    console.log(unallocatedControls,allocatedControls)
+    myContol=-99
+    let message={
+        appID: appIdentifier,
+        data:{
+            type: "setControl",
+            value: -99
+        }
+    }
+    ws.send(JSON.stringify(message));
+  }
+
   ws.on('message', (message) => {
     console.log('Received:', message.toString())
     let parsed=JSON.parse(message)
     if(parsed.appID==appIdentifier){
-        if(parsed.data.type=="live"){
+        if(parsed.data.type=="live" && parsed.data.value=="0"){
+            liveClientDemo=ws
+            sendData("youAreLiveDemo",0)
+            deallocateControl()
+        }
+        if(parsed.data.type=="live" && parsed.data.value=="1"){
             liveClient=ws
-            sendData("youAreLive",0)
+            sendData("youAreLive",1)
+            deallocateControl()
         }
         if(parsed.data.type=="resetControls"){
             unallocatedControls=[0,1,2,3,4,5,6,7]
@@ -113,6 +139,9 @@ wss.on('connection', function connection(ws) {
             }
             });
         }
+    }
+    if(liveClientDemo !== null){
+        liveClientDemo.send(message.toString())
     }
     if(liveClient !== null){
         liveClient.send(message.toString())
