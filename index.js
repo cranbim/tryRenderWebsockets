@@ -61,7 +61,7 @@ let liveClient=null //active control driven visuals
 
 wss.on('connection', function connection(ws) {
   let myConnection=getNextConnection(ws)
-  let myContol=getControl(ws)
+  let myControl=getControl(ws)
   ws.isAlive = true
   if(myConnection>-1){
     console.log('connection received, allocating: ',myConnection)
@@ -69,9 +69,9 @@ wss.on('connection', function connection(ws) {
   } else {
     console.log('connection not allocated')
   }
-  if(myContol>-1){
-    console.log('control allocated: ',myContol)
-    sendMessage('setControl',myContol)
+  if(myControl>-1){
+    console.log('control allocated: ',myControl)
+    sendMessage('setControl',myControl)
   } else {
     console.log('control not allocated')
   }
@@ -92,14 +92,14 @@ wss.on('connection', function connection(ws) {
   }
 
   function deallocateControl(){
-    console.log("deallocate control",myContol)
-    let ci=allocatedControls.findIndex(i => i==myContol)
+    console.log("deallocate control",myControl)
+    let ci=allocatedControls.findIndex(i => i==myControl)
     if(ci>-1){
         allocatedControls.splice(ci,1)
         unallocatedControls.push(myControl)
     }
     console.log(unallocatedControls,allocatedControls)
-    myContol=-99
+    myControl=-99
     // let message={
     //     appID: appIdentifier,
     //     data:{
