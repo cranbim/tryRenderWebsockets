@@ -92,21 +92,22 @@ wss.on('connection', function connection(ws) {
   }
 
   function deallocateControl(){
-    let ci=allocatedControls.findIndex(myContol)
+    console.log("deallocate control",myContol)
+    let ci=allocatedControls.findIndex(i => i==myContol)
     if(ci>-1){
         allocatedControls.splice(ci,1)
         unallocatedControls.push(c)
     }
     console.log(unallocatedControls,allocatedControls)
     myContol=-99
-    let message={
-        appID: appIdentifier,
-        data:{
-            type: "setControl",
-            value: -99
-        }
-    }
-    ws.send(JSON.stringify(message));
+    // let message={
+    //     appID: appIdentifier,
+    //     data:{
+    //         type: "setControl",
+    //         value: -99
+    //     }
+    // }
+    // ws.send(JSON.stringify(message));
   }
 
   ws.on('message', (message) => {
