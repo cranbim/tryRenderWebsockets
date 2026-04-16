@@ -13,7 +13,8 @@ let rel7DriftStep=0
 rels[7]=rel7DriftSteps[rel7DriftStep]
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  let myCanvas1=createCanvas(windowWidth, windowHeight);
+  myCanvas1.parent('canvasContainer');
   rc=new RepelCellsRadial(3)
   // seq1=new Seq1()
   // seq2=new Seq2()
